@@ -1,0 +1,48 @@
+﻿
+@{
+    ViewData["Title"] = "DisplayRecord";
+}
+
+<h1>View Huma Vital</h1>
+<button id="displayDetail">Load list</button>
+<div class="results">Fetching ..</div>
+
+
+<script>
+    $(document).ready(function () {
+        $("DisplayDetail").click(function () {
+            ViewHumanVital();
+        });
+    });
+    function ViewHumanVital() {       
+
+            var userToken = storage.getItem("Token");
+            $.ajax({
+                cache: false,
+
+                type: "GET",
+                url: "https://infinitysmartapi-dev.azurewebsites.net/api/auth",
+                headers: {
+                    'Authorization': 'Bearer ' + userToken,
+                    'Access-Control-Allow-Origin': 'https://infinitysmartapi-dev.azurewebsites.net'
+                },
+                success: function (data) {
+                    var result = "";
+                    $.each(data, function (id, Details) {
+                        result += '<b>OrganizationId : </b>' + Details.organizationId + '<br />' +
+                            '<b> BusinessId :</b>' + Details.businessUnitId + '<br />' +
+                            '<b> HeartRate :</b>' + Details.heartRate + '<br />' +
+                            '<b> Temperature :</b>' + Details.temperature + '<hr />';
+                    });
+                    $('.results').html(result);
+                },
+                error: function (response) {
+                    debugger;
+                    alert('eror');
+                }
+            });
+     
+    }
+
+  
+</script>

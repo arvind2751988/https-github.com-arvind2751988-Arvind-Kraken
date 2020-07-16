@@ -1,0 +1,90 @@
+﻿
+@{
+    ViewData["Title"] = "Login";
+}
+    <link href="~/css/Login.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<h2>Login</h2>
+
+<button onclick="document.getElementById('id01').style.display='block'" style="width:auto;">Login</button>
+
+<div id="id01" class="modal">
+
+    <div class="modal-content animate" >
+        <div class="imgcontainer">
+            <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
+           
+        </div>
+
+        <div class="container">
+            <label for="uname"><b>Username</b></label>
+            <input type="text" placeholder="Enter Username" id="UserName" name="uname" required>
+
+            <label for="psw"><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" id="Password" name="psw" required>
+
+            <button type="submit" id="Login">Login</button>
+           
+        </div>
+
+        <div class="container" style="background-color:#f1f1f1">
+            <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
+            <span class="psw">Forgot <a href="#">password?</a></span>
+        </div>
+    </div>
+</div>
+
+<script>
+// Get the modal
+var modal = document.getElementById('id01');
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+    }
+    $("#Login").click(function () {
+        Login();
+    });
+
+    function Login() {
+       
+            var LoginData = {
+                username: $("#Email").val(),
+                password: $("#Password").val(),
+
+        };
+        var userToken = storage.getItem("Token");
+
+            $.ajax({
+                cache: false,
+                async: false,
+                type: 'GET',
+                dataType: 'JSON',
+                data: LoginData,
+                headers: {
+                    'Authorization': 'Bearer ' + userToken,
+                    'Access-Control-Allow-Origin': 'https://infinitysmartapi-dev.azurewebsites.net'
+                },
+                url: 'https://infinitysmartapi-dev.azurewebsites.net/api/auth',
+                success: function (result) {
+                    console.log(result);
+                    storage.setItem("Token", result.token);
+
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                },
+                complete: function (xhr, status) {
+                }
+            });
+
+
+
+    }
+    function addRequestVerificationToken(data) {
+        data.__RequestVerificationToken = $('input[name=__RequestVerificationToken]').val();
+        return data;
+    }
+</script>
